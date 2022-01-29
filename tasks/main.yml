@@ -1,0 +1,51 @@
+---
+###############################################################################
+# Dropbear Remote Unlock Encrypted Boot Device
+###############################################################################
+#
+# Reference:
+# * https://linuxconfig.org/how-to-install-and-configure-dropbear-on-linux
+
+- name: 'install | ensure latest dropbear version'
+  ansible.builtin.apt:
+    name:  '{{ dropbear_default_packages }}'
+    state: 'latest'
+    update_cache: true
+
+- name: 'install | set dropbear config'
+  ansible.builtin.template:
+    src:   'config.j2'
+    dest:  '/etc/dropbear-initramfs/config'
+    owner: 'root'
+    group: 'root'
+    mode:  0644
+    force: true
+  notify: 'update-initramfs dropbear'
+
+- name: 'install | remove insecure/unused dropbear keys'
+  ansible.builtin.file:
+    path:  '/etc/dropbear-initramfs/dropbear_{{ item }}_host_key'
+    state: 'absent'
+  loop:
+    - 'dss'
+    - 'ecdsa'
+    - 'ed25519'
+  notify: 'update-initramfs dropbear'
+
+- name: 'install | set dropbear host key'
+  ansible.builtin.copy:
+    src:   '{{ dropbear_rsa_host_key_file }}'
+    dest:  '/etc/dropbear-initramfs/dropbear_rsa_host_key'
+    owner: 'root'
+    group: 'root'
+    mode:  0600
+  notify: 'update-initramfs dropbear'
+
+- name: 'install | set dropbear authorized_keys'
+  ansible.builtin.copy:
+    dest:    '/etc/dropbear-initramfs/authorized_keys'
+    owner:   'root'
+    group:   'root'
+    mode:    0644
+    content: '{{ dropbear_public_key }}'
+  notify: 'update-initramfs dropbear'

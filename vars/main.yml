@@ -1,0 +1,8 @@
+---
+###############################################################################
+# Default Dropbear Package Dependencies
+###############################################################################
+# Default required packages for Dropbear install.
+
+dropbear_default_packages:
+  - 'dropbear-initramfs'

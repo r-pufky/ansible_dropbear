@@ -1,0 +1,3 @@
+rules:
+  colons:
+    max-spaces-after: -1 # enable vertical alignment of config.

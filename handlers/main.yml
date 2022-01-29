@@ -1,0 +1,11 @@
+---
+###############################################################################
+# Dropbear handlers
+###############################################################################
+
+- name: 'update-initramfs dropbear'
+  ansible.builtin.command: 'update-initramfs -u'
+  notify: 'update-grub dropbear'
+
+- name: 'update-grub dropbear'
+  ansible.builtin.command: 'update-grub'
