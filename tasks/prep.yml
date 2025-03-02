@@ -1,0 +1,23 @@
+---
+# yamllint disable rule:line-length
+###############################################################################
+# Dropbear Prep
+###############################################################################
+# Assert host key is correct if set.
+#
+# Generates:
+#   _dropbear_host_key_type: str - dropbear host key type.
+
+- name: 'Prep | parse host key type'
+  when: dropbear_service_host_key_path | length > 0
+  ansible.builtin.set_fact:
+    _dropbear_host_key_type: '{{ dropbear_service_host_key_path.rsplit("/")[-1].split("_")[1] }}'
+
+- name: 'Prep | assert host key requirements'
+  when: dropbear_service_host_key_path | length > 0
+  ansible.builtin.assert:
+    that:
+      - _dropbear_host_key_type in dropbear_role_valid_key_types
+    fail_msg: >
+      dropbear_service_host_key_path must be one of:
+      {{ dropbear_role_valid_key_types | join(", ") }}.

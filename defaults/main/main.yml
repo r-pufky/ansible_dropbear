@@ -1,0 +1,93 @@
+---
+# yamllint disable rule:line-length
+###############################################################################
+# Dropbear Service Configuration
+###############################################################################
+# Highly recommend using 4096bit RSA keys.
+#
+# Reference:
+# * https://research.kudelskisecurity.com/2017/10/04/defeating-eddsa-with-faults/
+
+# Path to dropbear host identification key.
+#
+# Sourced from ansible controller; automatically placed in
+# /etc/dropbear/initramfs/ with correct permissions.
+#
+#   dropbearkey -t rsa -s 4096 -f dropbear_rsa_host_key
+#   ansible-vault encrypt dropbear_rsa_host_key
+#
+# Special Case:
+#   * key file must be 'dropbear_{TYPE}_host_key'.
+#
+# dropbear_service_host_key_path:
+#   'host_vars/dropbear.example.com/vars/dropbear_rsa_host_key'
+#
+# Default: '' (use pre-generated keys).
+dropbear_service_host_key_path: ''
+
+# Remove all host keys except dropbear_service_host_key_path? Default: False.
+dropbear_service_remove_host_keys_enable: false
+
+# List of command line options to pass to dropbear.
+#
+# Disable password authentication, port forwarding, and allow 1 authentication
+# attempt per connection.
+#
+# Default: ['-s', '-g', '-j', '-k', '-m', '-p 22', '-T 1'] (defaults).
+#
+# Reference:
+# * https://manpages.debian.org/bookworm/dropbear-bin/dropbear.8.en.html
+dropbear_service_options:
+  - '-s'
+  - '-g'
+  - '-j'
+  - '-k'
+  - '-m'
+  - '-p 22'
+  - '-T 1'
+
+# Down matching interfaces before exiting initramfs?
+#
+# Local (non-NFS) mounts, interfaces matching this pattern are brought down
+# before exiting the ramdisk to avoid dirty network configuration in the normal
+# kernel.
+#
+# Values:
+#   {REGEX}: Down all matching interfaces before exiting initramfs.
+#         *: Down all interfaces before exiting initramfs.
+#      none: Keep all interfaces up existing initramfs (preserves routing
+#            tables and addresses).
+#
+# Default: '*' (down all interfaces).
+dropbear_service_ifdown: '*'
+
+# Maximum configuration timeout (seconds).
+#
+# Local (non-NFS) mounts, the network stack and dropbear are started
+# asynchronously at init-premount stage. This value specifies the maximum
+# number of seconds to wait (while the network/dropbear are being configured)
+# at init-bottom stage before terminating dropbear and bringing the network
+# down.
+#
+# If the timeout is too short, and if the boot process is not blocking on user
+# input supplied via SSHd (ie no remote unlocking), then the initrd might pivot
+# to init(1) too early, thereby causing a race condition between network
+# configuration from initramfs vs from the normal system.
+#
+# Default: 60.
+dropbear_service_shutdown_timeout: 60
+
+###############################################################################
+# Dropbear Authorized Keys
+###############################################################################
+# Root user dropbear public key.
+#
+# Use unique keypair with at least password protection.
+#
+#   ssh-keygen -b 4096 -t rsa -f ~/.ssh/dropbear
+#
+# If -s and -g are specified in dropbear_service_options, leaving this empty
+# effectively prevents any logins.
+#
+# Default: '' (no logins).
+dropbear_service_public_key: ''

@@ -1,0 +1,74 @@
+---
+# yamllint disable rule:line-length
+###############################################################################
+# Dropbear Config
+###############################################################################
+# Set configuration file, host keys, optionally removing pre-generated host
+# keys, and set authorized_keys file options.
+#
+# TODO(2.18): confirmed this is now resolved in 2.18.
+# Dropbear host keys are binary files (and NOT standard OpenSSH keypairs);
+# these cannot be stored encrypted in the {host,group}_vars directory. Ansible
+# will try to automatically decrypt this file and fail due to UTF-8 encoding
+# issues.:
+#
+#   ERROR! 'utf-8' codec can't encode characters in position 23-24: surrogates
+#          not allowed
+#
+# Storing within ansible but outside of {host,group}_vars to prevent decryption
+# until the binary file is copied, wherein the decryption happens correctly.
+# See reference.
+#
+# Args:
+#   _dropbear_host_key_type: str - dropbear host key type.
+#
+# Reference:
+# * https://linuxconfig.org/how-to-install-and-configure-dropbear-on-linux
+# * https://github.com/ansible/ansible/issues/79053
+
+- name: 'Config | set dropbear.conf'
+  notify:
+    - 'Handlers | update-initramfs'
+    - 'Handlers | update-grub'
+  ansible.builtin.template:
+    src: 'dropbear.conf.j2'
+    dest: '/etc/dropbear/initramfs/dropbear.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+    force: true
+
+- name: 'Config | remove non-specified host keys'
+  when: dropbear_service_remove_host_keys_enable
+  notify:
+    - 'Handlers | update-initramfs'
+    - 'Handlers | update-grub'
+  ansible.builtin.file:
+    path: '/etc/dropbear/initramfs/dropbear_{{ item }}_host_key'
+    state: 'absent'
+  loop: '{{ dropbear_role_valid_key_types | difference([_dropbear_host_key_type]) }}'
+
+- name: 'Config | set dropbear host key'
+  when: dropbear_service_host_key_path | length > 0
+  notify:
+    - 'Handlers | update-initramfs'
+    - 'Handlers | update-grub'
+  ansible.builtin.copy:
+    src: '{{ dropbear_service_host_key_path }}'
+    dest: '/etc/dropbear/initramfs/dropbear_{{ _dropbear_host_key_type }}_host_key'
+    owner: 'root'
+    group: 'root'
+    mode: '0600'
+    force: true
+
+- name: 'Config | set dropbear authorized_keys'
+  notify:
+    - 'Handlers | update-initramfs'
+    - 'Handlers | update-grub'
+  ansible.builtin.copy:
+    content: '{{ dropbear_service_public_key }}'
+    dest: '/etc/dropbear/initramfs/authorized_keys'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+    force: true

@@ -1,0 +1,79 @@
+---
+# yamllint disable rule:line-length
+- name: 'Default | verify'
+  hosts: 'all'
+  gather_facts: false
+  become: true
+  tasks:
+    - name: 'Default | verify | query dropbear.conf'
+      ansible.builtin.copy:
+        src: 'files/dropbear.conf'
+        dest: '/etc/dropbear/initramfs/dropbear.conf'
+        owner: 'root'
+        group: 'root'
+        mode: '0644'
+      check_mode: true
+      diff: true
+      register: _test_dropbear_conf
+
+    - name: 'Default | verify | assert dropbear.conf'
+      ansible.builtin.assert:
+        that:
+          - not _test_dropbear_conf.changed
+        fail_msg: >
+          /etc/dropbear/initramfs/dropbear.conf not in expected format:
+          {{ _test_dropbear_conf.diff }}.
+
+    - name: 'Default | verify | query dropbear_rsa_host_key'
+      ansible.builtin.copy:
+        src: '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/dropbear_rsa_host_key'
+        dest: '/etc/dropbear/initramfs/dropbear_rsa_host_key'
+        owner: 'root'
+        group: 'root'
+        mode: '0600'
+      check_mode: true
+      register: _test_dropbear_host_key
+
+    - name: 'Default | verify | assert dropbear_rsa_host_key'
+      ansible.builtin.assert:
+        that:
+          - not _test_dropbear_host_key.changed
+        fail_msg: >
+          /etc/dropbear/initramfs/dropbear_rsa_host_key not in expected format:
+          {{ _test_dropbear_host_key.diff }}.
+
+    - name: 'Default | verify | query dropbear_dss_host_key'
+      ansible.builtin.stat:
+        path: '/etc/dropbear/initramfs/dropbear_dss_host_key'
+      register: _test_dropbear_dss_host_key
+
+    - name: 'Default | verify | assert dropbear_dss_host_key'
+      ansible.builtin.assert:
+        that:
+          - not _test_dropbear_dss_host_key.stat.exists
+        fail_msg: >
+          /etc/dropbear/initramfs/dropbear_dss_host_key should have been removed.
+
+    - name: 'Default | verify | query dropbear_ecdsa_host_key'
+      ansible.builtin.stat:
+        path: '/etc/dropbear/initramfs/dropbear_ecdsa_host_key'
+      register: _test_dropbear_ecdsa_host_key
+
+    - name: 'Default | verify | assert dropbear_ecdsa_host_key'
+      ansible.builtin.assert:
+        that:
+          - not _test_dropbear_ecdsa_host_key.stat.exists
+        fail_msg: >
+          /etc/dropbear/initramfs/dropbear_ecdsa_host_key should have been removed.
+
+    - name: 'Default | verify | query dropbear_ed25519_host_key'
+      ansible.builtin.stat:
+        path: '/etc/dropbear/initramfs/dropbear_ed25519_host_key'
+      register: _test_dropbear_ed25519_host_key
+
+    - name: 'Default | verify | assert dropbear_ed25519_host_key'
+      ansible.builtin.assert:
+        that:
+          - not _test_dropbear_ed25519_host_key.stat.exists
+        fail_msg: >
+          /etc/dropbear/initramfs/dropbear_ed25519_host_key should have been removed.
