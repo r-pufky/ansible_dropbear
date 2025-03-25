@@ -27,9 +27,7 @@
 # * https://github.com/ansible/ansible/issues/79053
 
 - name: 'Config | set dropbear.conf'
-  notify:
-    - 'Handlers | update-initramfs'
-    - 'Handlers | update-grub'
+  notify: 'Handlers | update dropbear'
   ansible.builtin.template:
     src: 'dropbear.conf.j2'
     dest: '/etc/dropbear/initramfs/dropbear.conf'
@@ -40,9 +38,7 @@
 
 - name: 'Config | remove non-specified host keys'
   when: dropbear_service_remove_host_keys_enable
-  notify:
-    - 'Handlers | update-initramfs'
-    - 'Handlers | update-grub'
+  notify: 'Handlers | update dropbear'
   ansible.builtin.file:
     path: '/etc/dropbear/initramfs/dropbear_{{ item }}_host_key'
     state: 'absent'
@@ -50,9 +46,7 @@
 
 - name: 'Config | set dropbear host key'
   when: dropbear_service_host_key_path | length > 0
-  notify:
-    - 'Handlers | update-initramfs'
-    - 'Handlers | update-grub'
+  notify: 'Handlers | update dropbear'
   ansible.builtin.copy:
     src: '{{ dropbear_service_host_key_path }}'
     dest: '/etc/dropbear/initramfs/dropbear_{{ _dropbear_host_key_type }}_host_key'
@@ -62,9 +56,7 @@
     force: true
 
 - name: 'Config | set dropbear authorized_keys'
-  notify:
-    - 'Handlers | update-initramfs'
-    - 'Handlers | update-grub'
+  notify: 'Handlers | update dropbear'
   ansible.builtin.copy:
     content: '{{ dropbear_service_public_key }}'
     dest: '/etc/dropbear/initramfs/authorized_keys'
