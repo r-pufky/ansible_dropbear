@@ -1,9 +1,8 @@
 ---
-# yamllint disable rule:line-length
 ###############################################################################
 # Ports Configuration
 ###############################################################################
-# Manage firewall with r_pufky.srv.ufw.
+# Manage firewall with r_pufky.deb.ufw.
 #
 # Port exposure is only required for wireguard servers accepting connections.
 #
@@ -11,4 +10,8 @@
 # * https://github.com/r-pufky/ansible_ufw
 
 dropbear_ports:
-  - {proto: 'tcp', from_ip: 'any', to_port: 22, direction: 'in', comment: 'dropbear service'}
+  - proto: 'tcp'
+    from_ip: 'any'
+    to_port: 22
+    direction: 'in'
+    comment: 'Dropbear SSH'

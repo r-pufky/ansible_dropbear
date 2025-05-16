@@ -1,5 +1,4 @@
 ---
-# yamllint disable rule:line-length
 ###############################################################################
 # Dropbear Config
 ###############################################################################
@@ -42,14 +41,17 @@
   ansible.builtin.file:
     path: '/etc/dropbear/initramfs/dropbear_{{ item }}_host_key'
     state: 'absent'
-  loop: '{{ dropbear_role_valid_key_types | difference([_dropbear_host_key_type]) }}'
+  loop: '{{
+      dropbear_role_valid_key_types | difference([_dropbear_host_key_type])
+    }}'
 
 - name: 'Config | set dropbear host key'
   when: dropbear_service_host_key_path | length > 0
   notify: 'Handlers | update dropbear'
   ansible.builtin.copy:
     src: '{{ dropbear_service_host_key_path }}'
-    dest: '/etc/dropbear/initramfs/dropbear_{{ _dropbear_host_key_type }}_host_key'
+    dest:
+      '/etc/dropbear/initramfs/dropbear_{{ _dropbear_host_key_type }}_host_key'
     owner: 'root'
     group: 'root'
     mode: '0600'

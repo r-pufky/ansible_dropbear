@@ -1,17 +1,20 @@
 ---
-# yamllint disable rule:line-length
-# Network level testing requires VMs for kernel namespace and systemd
-# networking without affecting host.
-#
+###############################################################################
+# Default
+###############################################################################
 # Invalid dropbear configs (e.g. user error in configuration) are not tested;
 # only that settings as specified are deployed correctly.
 #
+# Network level testing requires VMs for kernel namespace and systemd
+# networking without affecting host.
+#
 # Keys are randomly generated test keys.
 #
-# Confirm:
+# Tests:
 # * unused host keys are removed.
 # * dropbear.conf is rendered correctly.
 # * binary host key is copied correctly.
+
 dependency:
   name: 'galaxy'
 driver:
@@ -32,9 +35,16 @@ provisioner:
   inventory:
     group_vars:
       all:
-        dropbear_service_host_key_path: '{{ lookup("env", "MOLECULE_PROJECT_DIRECTORY") }}/molecule/files/dropbear_rsa_host_key'
+        dropbear_service_host_key_path: '{{
+            lookup("env", "MOLECULE_PROJECT_DIRECTORY") ~
+            "/molecule/files/dropbear_rsa_host_key"
+          }}'
         dropbear_service_remove_host_keys_enable: true
-        dropbear_service_public_key: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBg1qc6KoEQUT1bXV02V3+xHUA/PgFb1hsvza4d+Kf7Y root@dropbear-test'
+        dropbear_service_public_key: '{{
+            lookup("ansible.builtin.file",
+                   lookup("env", "MOLECULE_PROJECT_DIRECTORY") ~
+                   "/molecule/files/id_dropbear.pub")
+          }}'
 platforms:
   - name: 'dropbear-debian-12-vm-default'
     box: 'debian/bookworm64'

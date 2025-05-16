@@ -3,6 +3,6 @@
   hosts: 'all'
   become: true
   tasks:
-    - name: 'Default | converge | apply r_pufky.srv.dropbear'
+    - name: 'Default | converge | apply r_pufky.deb.dropbear'
       ansible.builtin.include_role:
-        name: 'r_pufky.srv.dropbear'
+        name: 'r_pufky.deb.dropbear'

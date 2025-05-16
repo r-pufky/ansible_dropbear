@@ -4,8 +4,6 @@ Dropbear initramfs.
 ## Requirements
 [supported platforms](https://github.com/r-pufky/ansible_dropbear/blob/main/meta/main.yml)
 
-[collections/roles](https://github.com/r-pufky/ansible_dropbear/blob/main/meta/requirements.yml)
-
 ## Role Variables
 [defaults](https://github.com/r-pufky/ansible_dropbear/tree/main/defaults/main)
 
@@ -15,8 +13,8 @@ All ports and protocols have been defined for the role.
 [defaults/ports.yml](https://github.com/r-pufky/ansible_dropbear/blob/main/defaults/main/ports.yml)
 
 ## Dependencies
-Part of the [r_pufky.srv](https://github.com/r-pufky/ansible_collection_srv)
-collection.
+**galaxy-ng** roles cannot be used independently. Part of
+[r_pufky.deb](https://github.com/r-pufky/ansible_collection_deb) collection.
 
 ## Host keys
 Dropbear host keys are binary files (and NOT standard OpenSSH keypairs); use
@@ -30,7 +28,7 @@ This key should be vault encrypted.
 
 ## Example Playbook
 Read defaults documentation. May be applied in combination with
-`r_pufky.srv.wireguard`.
+`r_pufky.deb.wireguard`.
 
 Configure dropbear to use a custom host key and public key for authentication,
 remove all pre-generated keys.
@@ -46,11 +44,11 @@ Apply the base role
 ``` yaml
 - name: 'Apply base configuration'
   ansible.builtin.include_role:
-    name: 'r_pufky.srv.wireguard'
+    name: 'r_pufky.deb.wireguard'
 ```
 
 ## Development
-Configure [environment](https://github.com/r-pufky/ansible_collection_srv/blob/main/docs/dev/environment/README.md)
+Configure [environment](https://github.com/r-pufky/ansible_collection_docs/blob/main/dev/environment/README.md)
 
 Run all unit tests:
 ``` bash
