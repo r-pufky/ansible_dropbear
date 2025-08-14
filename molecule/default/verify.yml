@@ -1,27 +1,28 @@
 ---
-- name: 'Default | verify'
+- name: 'Verify'
   hosts: 'all'
   gather_facts: false
   become: true
   tasks:
-    - name: 'Default | verify | dropbear.conf'
+    - name: 'Verify | dropbear.conf'
       ansible.builtin.include_role:
         name: 'r_pufky.lib.tests'
         tasks_from: 'copy.yml'
       vars:
-        test_name: 'Default | verify | dropbear.conf'
+        test_name: 'Verify | dropbear.conf'
         test_src: 'files/dropbear.conf'
         test_file: '/etc/dropbear/initramfs/dropbear.conf'
         test_owner: 'root'
         test_group: 'root'
         test_mode: '0644'
+        test_diff: true
 
-    - name: 'Default | verify | dropbear_rsa_host_key'
+    - name: 'Verify | dropbear_rsa_host_key'
       ansible.builtin.include_role:
         name: 'r_pufky.lib.tests'
         tasks_from: 'copy.yml'
       vars:
-        test_name: 'Default | verify | dropbear_rsa_host_key'
+        test_name: 'Verify | dropbear_rsa_host_key'
         test_src: '{{
             lookup("env", "MOLECULE_PROJECT_DIRECTORY") ~
             "/molecule/files/dropbear_rsa_host_key"
@@ -32,17 +33,18 @@
         test_mode: '0600'
         test_diff: true
 
-    - name: 'Default | verify | absent'
+    - name: 'Verify | absent'
       ansible.builtin.include_role:
         name: 'r_pufky.lib.tests'
         tasks_from: 'file.yml'
       vars:
-        test_name: 'Default | verify | absent | {{ item }}'
+        test_name: 'Verify | absent | {{ item }}'
         test_file: '{{ item }}'
         test_owner: '{{ omit }}'
         test_group: '{{ omit }}'
         test_mode: '{{ omit }}'
         test_state: 'absent'
+        test_diff: true
       loop:
         - '/etc/dropbear/initramfs/dropbear_dss_host_key'
         - '/etc/dropbear/initramfs/dropbear_ecdsa_host_key'
