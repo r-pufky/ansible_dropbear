@@ -37,7 +37,7 @@ dropbear_service_remove_host_keys_enable: false
 # Default: ['-s', '-g', '-j', '-k', '-m', '-p 22', '-T 1'] (defaults).
 #
 # Reference:
-# * https://manpages.debian.org/bookworm/dropbear-bin/dropbear.8.en.html
+# * https://manpages.debian.org/trixie/dropbear-bin/dropbear.8.en.html
 dropbear_service_options:
   - '-s'
   - '-g'

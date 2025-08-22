@@ -19,6 +19,10 @@
     quiet: true
     that:
       - _dropbear_host_key_type in dropbear_role_valid_key_types
-    fail_msg: >
-      ✘ dropbear_service_host_key_path must be one of:
-      {{ dropbear_role_valid_key_types | join(", ") }}.
+    fail_msg: |
+      ╭───────────────────────────────────────────────────────────────────╮
+      │                                                                   │
+      │             dropbear_service_host_key_path incorrect.             │
+      │                                                                   │
+      ├───────────────────────────────────────────────────────────────────╯
+      │ Must be one of: {{ dropbear_role_valid_key_types | join(", ") }}.

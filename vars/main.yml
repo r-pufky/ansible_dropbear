@@ -4,8 +4,8 @@
 ###############################################################################
 
 # Last time Dropbear options were validated against a default configuration.
-dropbear_role_validate_date: '2025-03-01'
-dropbear_role_validate_release: 'bookworm'
+dropbear_role_validate_date: '2025-08-21'
+dropbear_role_validate_release: 'trixie'
 
 dropbear_role_valid_key_types:
   - 'dss'
