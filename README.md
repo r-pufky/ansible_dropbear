@@ -44,7 +44,7 @@ Apply the base role
 ``` yaml
 - name: 'Apply base configuration'
   ansible.builtin.include_role:
-    name: 'r_pufky.deb.wireguard'
+    name: 'r_pufky.deb.dropbear'
 ```
 
 ## Development
