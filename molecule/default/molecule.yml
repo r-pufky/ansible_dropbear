@@ -47,8 +47,7 @@ provisioner:
           }}'
 platforms:
   - name: 'dropbear-debian-13-vm-default'
-    # TODO(role): switch to debian/trixie64 when released.
-    box: 'debian/testing64'
+    box: 'inception-of-things/debian-trixie'
     memory: 4096
     cpus: 2
     interfaces:
