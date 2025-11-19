@@ -30,6 +30,9 @@ This key should be vault encrypted.
 Read defaults documentation. May be applied in combination with
 `r_pufky.deb.wireguard`.
 
+[Additional documentation](http://r-pufky.github.io/r-pufky/docs/service/dropbear).
+
+
 Configure dropbear to use a custom host key and public key for authentication,
 remove all pre-generated keys.
 
