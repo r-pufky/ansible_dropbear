@@ -1,78 +1,93 @@
 # Dropbear
 Dropbear initramfs.
 
-## Requirements
-[supported platforms](https://github.com/r-pufky/ansible_dropbear/blob/main/meta/main.yml)
+## [Requirements][i]
+Requires [r_pufky.deb][g] galaxy-ng collection.
+
+See [reference documentation][h] for specific dropbear configurations. GRUB
+bootloader required (Debian default).
 
 ## Role Variables
-[defaults](https://github.com/r-pufky/ansible_dropbear/tree/main/defaults/main)
+Detailed variable use documented in defaults. See usage for role operation.
 
-### Ports
-All ports and protocols have been defined for the role.
+* [defaults][j] - User configurable options.
 
-[defaults/ports.yml](https://github.com/r-pufky/ansible_dropbear/blob/main/defaults/main/ports.yml)
+* [ports][k] - Ports are **not** managed (defined for external use).
 
-## Dependencies
-**galaxy-ng** roles cannot be used independently. Part of
-[r_pufky.deb](https://github.com/r-pufky/ansible_collection_deb) collection.
+## Usage
 
-## Host keys
-Dropbear host keys are binary files (and NOT standard OpenSSH keypairs); use
-tooling provided by the package to generate key material:
+### Host Keys
+Dropbear host keys are **binary** files (**not** standard OpenSSH keypairs).
 
 ``` bash
+# Use tooling provided by the package to generate key material.
 dropbearkey -t rsa -s 4096 -f dropbear_rsa_host_key
+ansible-vault encrypt dropbear_rsa_host_key
 ```
 
-This key should be vault encrypted.
+### Authorized Keys
 
-## Example Playbook
-Read defaults documentation. May be applied in combination with
-`r_pufky.deb.wireguard`.
-
-[Additional documentation](http://r-pufky.github.io/r-pufky/docs/service/dropbear).
-
-
-Configure dropbear to use a custom host key and public key for authentication,
-remove all pre-generated keys.
-
-host_vars/dropbear.example.com/vars/dropbear.yml
-``` yaml
-dropbear_service_host_key_path: 'host_vars/dropbear.example.com/dropbear_rsa_host_key'
-dropbear_service_remove_host_keys_enable: true
-dropbear_service_public_key: '{{ vault_dropbear_service_public_key }}'
+``` bash
+# Use a unique keypair with a unique password.
+ssh-keygen -b 4096 -t rsa -f ~/.ssh/dropbear
+cp dropbear.pub dropbear_authorized_key
+ansible-vault encrypt dropbear_authorized_key
 ```
 
-Apply the base role
+### Example Playbooks
+May be applied in combination with [r_pufky.deb.wireguard][l].
+
 ``` yaml
-- name: 'Apply base configuration'
+- name: 'Removes unused host keys, rebuilds initramfs, and updates GRUB.'
   ansible.builtin.include_role:
     name: 'r_pufky.deb.dropbear'
+  vars:
+    dropbear_cfg_host_key_file:
+      'host_vars/dropbear.example.com/dropbear_rsa_host_key'
+    dropbear_srv_remove_unused_keys: true
+    dropbear_cfg_authorized_key_file:
+      'host_vars/dropbear.example.com/dropbear_authorized_keys'
 ```
 
 ## Development
-Configure [environment](https://r-pufky.github.io/ansible_collection_docs/ansible/environment)
+Configure [environment][a].
 
-Run all unit tests:
 ``` bash
+# Run all tests.
 molecule test --all
 ```
 
-### Releases
-Major release versions track Debian release versions:
+### [Releases][b]
 
-* **[13.x.x](https://github.com/r-pufky/ansible_dropbear)**: 13 Trixie.
-* **[12.x.x](https://github.com/r-pufky/ansible_dropbear/tree/12.x)**: 12 Bookworm.
+ Release | Debian | Ansible | Notes
+---------|--------|---------|-------
+ 4.x.x   | 13     | 2.20    | Ansible 2.20, semantic versioning.
+ 3.x.x   | 13     | 2.18    | Migrate to Debian Trixie.
+ 2.x.x   | 12     | 2.18    | Use standardized libraries.
+ 1.x.x   | 12     | 2.18    | Migration from private repository.
 
-## Issues
+### Issues
 Create a bug and provide as much information as possible.
 
 Associate pull requests with a submitted bug.
 
 ## License
-[AGPL-3.0 License](https://www.tldrlegal.com/license/gnu-affero-general-public-license-v3-agpl-3-0)
- [(direct link)](https://github.com/r-pufky/ansible_dropbear/blob/main/LICENSE)
+[AGPL-3.0 License][c] | [direct link][f]
 
 ## Author Information
-PGP Fingerprint: [466EEC2B67516C7117C85CE3A0BC35D16698BAB9](https://keys.openpgp.org/vks/v1/by-fingerprint/466EEC2B67516C7117C85CE3A0BC35D16698BAB9)
-| [github gist](https://gist.github.com/r-pufky/a8df36977c55b5bb20829267c4c49d22)
+PGP: [466EEC2B67516C7117C85CE3A0BC35D16698BAB9][d] | [github gist][e]
+
+
+[a]: https://r-pufky.github.io/ansible_docs
+[b]: https://semver.org/spec/v2.0.0
+[c]: https://www.tldrlegal.com/license/gnu-affero-general-public-license-v3-agpl-3-0
+[d]: https://keys.openpgp.org/vks/v1/by-fingerprint/466EEC2B67516C7117C85CE3A0BC35D16698BAB9
+[e]: https://gist.github.com/r-pufky/a8df36977c55b5bb20829267c4c49d22
+
+[f]: https://github.com/r-pufky/ansible_dropbear/blob/main/LICENSE
+[g]: https://github.com/r-pufky/ansible_collection_deb
+[h]: http://r-pufky.github.io/docs/service/dropbear
+[i]: https://github.com/r-pufky/ansible_dropbear/blob/main/meta/main.yml
+[j]: https://github.com/r-pufky/ansible_dropbear/tree/main/defaults/main/main.yml
+[k]: https://github.com/r-pufky/ansible_dropbear/blob/main/defaults/main/ports.yml
+[l]: https://github.com/r-pufky/ansible_wireguard

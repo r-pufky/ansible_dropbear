@@ -2,8 +2,7 @@
 ###############################################################################
 # Default
 ###############################################################################
-# Invalid dropbear configs (e.g. user error in configuration) are not tested;
-# only that settings as specified are deployed correctly.
+# Default configuration is deployed successfully.
 #
 # Network level testing requires VMs for kernel namespace and systemd
 # networking without affecting host.
@@ -11,23 +10,22 @@
 # Keys are randomly generated test keys.
 #
 # Tests:
-# * unused host keys are removed.
+# * Unused host keys are removed.
 # * dropbear.conf is rendered correctly.
-# * binary host key is copied correctly.
+# * Binary host key is copied correctly.
 
 dependency:
   name: 'galaxy'
 driver:
   name: 'vagrant'
   provider:
-    name: 'virtualbox'
-    config_options:
-      ssh.keep_alive: true
-      ssh.remote_user: 'root'
-    options:
-      append_platform_to_hostname: false
+    name: 'libvirt'
+    type: 'libvirt'
 provisioner:
   name: 'ansible'
+  connection_options:
+    ansible_ssh_user: 'vagrant'
+    ansible_become: true
   config_options:
     defaults:
       interpreter_python: 'auto_silent'
@@ -35,42 +33,33 @@ provisioner:
   inventory:
     group_vars:
       all:
-        dropbear_service_host_key_path: '{{
+        dropbear_cfg_host_key_file: '{{
             lookup("env", "MOLECULE_PROJECT_DIRECTORY") ~
             "/molecule/files/dropbear_rsa_host_key"
           }}'
-        dropbear_service_remove_host_keys_enable: true
-        dropbear_service_public_key: '{{
-            lookup("ansible.builtin.file",
-                   lookup("env", "MOLECULE_PROJECT_DIRECTORY") ~
-                   "/molecule/files/id_dropbear.pub")
+        dropbear_srv_remove_unused_keys: true
+        dropbear_cfg_authorized_key_file: '{{
+            lookup("file",
+              lookup("env", "MOLECULE_PROJECT_DIRECTORY") ~
+                     "/molecule/files/id_dropbear.pub")
           }}'
 platforms:
-  - name: 'dropbear-debian-13-vm-default'
-    box: 'inception-of-things/debian-trixie'
+  - name: 'dropbear-default'
+    box: 'debian/trixie64'
     memory: 4096
     cpus: 2
     interfaces:
-      - network_name: private_network  # network_name required.
+      - network_name: 'private_network'
         auto_config: true
         type: 'dhcp'
 verifier:
   name: 'ansible'
-lint: |
-  set -e
-  yamllint .
-  ansible-lint .
 scenario:
   test_sequence:
-    # - 'dependency'
-    # - 'cleanup'
     - 'destroy'
     - 'syntax'
     - 'create'
-    # - 'prepare'
     - 'converge'
-    - 'idempotence'  # Files created, extracted, created, deleted.
-    # - 'side_effect'
+    - 'idempotence'
     - 'verify'
-    # - 'cleanup'
     - 'destroy'

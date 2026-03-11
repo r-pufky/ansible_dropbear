@@ -3,19 +3,23 @@
 # Dropbear Role Options
 ###############################################################################
 
-# Last time Dropbear options were validated against a default configuration.
-dropbear_role_validate_date: '2025-08-21'
-dropbear_role_validate_release: 'trixie'
+dropbear___release: "{{ {} | r_pufky.data.v3(
 
-dropbear_role_valid_key_types:
-  - 'dss'
-  - 'rsa'
-  - 'ecdsa'
-  - 'ed25519'
+    _date='2026-03-10',
+    _debian='trixie',
+  ) }}"
+
+dropbear___app: "{{ {} | r_pufky.data.v3(
+
+    _valid_key_types=['dss','rsa','ecdsa','ed25519'],
+    _cfg='/etc/dropbear/initramfs/dropbear.conf',
+    _etc_dir='/etc/dropbear/initramfs',
+    _authorized_keys_file='/etc/dropbear/initramfs/authorized_keys',
+  ) }}"
 
 ###############################################################################
 # APT Packages
 ###############################################################################
 
-dropbear_role_packages:
+dropbear___packages:
   - 'dropbear-initramfs'

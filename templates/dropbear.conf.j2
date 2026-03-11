@@ -7,7 +7,7 @@
 #
 # Command line options to pass to dropbear(8)
 #
-dropbear_service_options='{{ dropbear_service_options | default(['-s', '-g', '-j', '-k', '-m', '-p 22', '-T 1']) | join(' ') }}'
+dropbear_service_options='{{ dropbear__srv._options | join(' ') }}'
 
 #
 # On local (non-NFS) mounts, interfaces matching this pattern are
@@ -16,7 +16,7 @@ dropbear_service_options='{{ dropbear_service_options | default(['-s', '-g', '-j
 # The special value 'none' keeps all interfaces up and preserves routing
 # tables and addresses.
 #
-IFDOWN='{{ dropbear_service_ifdown | default('*') }}'
+IFDOWN='{{ dropbear__srv._ifdown }}'
 
 #
 # On local (non-NFS) mounts, the network stack and dropbear are started
@@ -30,4 +30,4 @@ IFDOWN='{{ dropbear_service_ifdown | default('*') }}'
 # condition between network configuration from initramfs vs from the
 # normal system.
 #
-dropbear_service_shutdown_timeout={{ dropbear_service_shutdown_timeout | default(60) }}
+dropbear_service_shutdown_timeout={{ dropbear__srv._shutdown_timeout }}

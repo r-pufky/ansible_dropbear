@@ -5,13 +5,13 @@
 # Reference:
 # * https://linuxconfig.org/how-to-install-and-configure-dropbear-on-linux
 
-- name: 'Install packages'
+- name: 'Install | packages'
   ansible.builtin.include_role:
     name: 'r_pufky.deb.apt'
   vars:
     apt_packages:
-      - '{{ dropbear_role_packages }}'
-    apt_package_update_cache: true
+      - '{{ dropbear___packages }}'
+    apt_srv_package_update_cache: true
 
 - name: 'Prep'
   ansible.builtin.include_tasks: 'prep.yml'
