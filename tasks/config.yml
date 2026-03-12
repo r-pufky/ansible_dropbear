@@ -9,7 +9,7 @@
 # * https://linuxconfig.org/how-to-install-and-configure-dropbear-on-linux
 
 - name: '{{ "Config | filesystem | set " ~ dropbear___app._cfg }}'
-  notify: 'Handlers | update | dropbear'
+  notify: 'Handlers | dropbear'
   ansible.builtin.template:
     src: 'dropbear.conf.j2'
     dest: '{{ dropbear___app._cfg }}'
@@ -20,7 +20,7 @@
 
 - name: 'Config | filesystem | remove unused host keys'
   when: dropbear__srv._remove_unused_keys
-  notify: 'Handlers | update | dropbear'
+  notify: 'Handlers | dropbear'
   ansible.builtin.file:
     path: '{{ dropbear___app._etc_dir ~ "/dropbear_" ~ item ~ "_host_key" }}'
     state: 'absent'
@@ -32,7 +32,7 @@
 - name:
     '{{ "Config | filesystem | set " ~ dropbear__cfg._host_key_dest_file }}'
   when: dropbear__cfg._host_key_file | length > 0
-  notify: 'Handlers | update | dropbear'
+  notify: 'Handlers | dropbear'
   ansible.builtin.copy:
     src: '{{ dropbear__cfg._host_key_file }}'
     dest: '{{ dropbear__cfg._host_key_dest_file }}'
@@ -43,7 +43,7 @@
 
 - name:
     '{{ "Config | filesystem | set " ~ dropbear___app._authorized_keys_file }}'
-  notify: 'Handlers | update | dropbear'
+  notify: 'Handlers | dropbear'
   ansible.builtin.copy:
     content: '{{ dropbear__cfg._authorized_key_file }}'
     dest: '{{ dropbear___app._authorized_keys_file }}'
