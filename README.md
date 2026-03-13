@@ -59,14 +59,14 @@ molecule test --all
 
 ### [Releases][b]
 
- Release | Debian | Ansible | Notes
----------|--------|---------|-------
- 4.x.x   | 13     | 2.20    | Ansible 2.20, semantic versioning.
- 3.x.x   | 13     | 2.18    | Migrate to Debian Trixie.
- 2.x.x   | 12     | 2.18    | Use standardized libraries.
- 1.x.x   | 12     | 2.18    | Migration from private repository.
+  Release | Debian | Ansible | Notes
+ ---------|--------|---------|-------
+  4.x.x   | 13     | 2.20    | Ansible 2.20, semantic versioning.
+  3.x.x   | 13     | 2.18    | Migrate to Debian Trixie.
+  2.x.x   | 12     | 2.18    | Use standardized libraries.
+  1.x.x   | 12     | 2.18    | Migration from private repository.
 
-### Issues
+## Issues
 Create a bug and provide as much information as possible.
 
 Associate pull requests with a submitted bug.
@@ -90,4 +90,4 @@ PGP: [466EEC2B67516C7117C85CE3A0BC35D16698BAB9][d] | [github gist][e]
 [i]: https://github.com/r-pufky/ansible_dropbear/blob/main/meta/main.yml
 [j]: https://github.com/r-pufky/ansible_dropbear/tree/main/defaults/main/main.yml
 [k]: https://github.com/r-pufky/ansible_dropbear/blob/main/defaults/main/ports.yml
-[l]: https://github.com/r-pufky/ansible_wireguard
+[l]: https://github.com/r-pufky/ansible_dropbear
