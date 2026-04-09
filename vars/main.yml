@@ -13,7 +13,7 @@ dropbear___app: "{{ {} | r_pufky.data.v3(
 
     _valid_key_types=['dss','rsa','ecdsa','ed25519'],
     _cfg='/etc/dropbear/initramfs/dropbear.conf',
-    _etc_dir='/etc/dropbear/initramfs',
+    _etc_d='/etc/dropbear/initramfs',
     _authorized_keys_file='/etc/dropbear/initramfs/authorized_keys',
   ) }}"
 

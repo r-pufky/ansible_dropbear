@@ -22,7 +22,7 @@
   when: dropbear__srv._remove_unused_keys
   notify: 'Handlers | dropbear'
   ansible.builtin.file:
-    path: '{{ dropbear___app._etc_dir ~ "/dropbear_" ~ item ~ "_host_key" }}'
+    path: '{{ dropbear___app._etc_d ~ "/dropbear_" ~ item ~ "_host_key" }}'
     state: 'absent'
   loop: '{{
       dropbear___app._valid_key_types |

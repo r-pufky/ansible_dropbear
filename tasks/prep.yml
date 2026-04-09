@@ -21,7 +21,7 @@
           dropbear_cfg_host_key_file.rsplit('/')[-1].split('_')[1]
         ),
         _host_key_dest_file=(
-          dropbear___app._etc_dir ~ '/dropbear_' ~
+          dropbear___app._etc_d ~ '/dropbear_' ~
           dropbear_cfg_host_key_file.rsplit('/')[-1].split('_')[1] ~
           '_host_key'
         ),
