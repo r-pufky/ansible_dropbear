@@ -33,6 +33,7 @@ provisioner:
   inventory:
     group_vars:
       all:
+        apt_srv_auto_grub_boot: true  # Testing VM only.
         dropbear_cfg_host_key_file: '{{
             lookup("env", "MOLECULE_PROJECT_DIRECTORY") ~
             "/molecule/files/dropbear_rsa_host_key"
